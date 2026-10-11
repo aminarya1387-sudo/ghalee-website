@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Apple Color Tokens */
+  --color-accent: #0066cc;
+  --color-accent-hover: #0077ed;
+  --color-accent-subtle: rgba(0, 102, 204, 0.08);
+
+  --color-bg: #ffffff;
+  --color-surface: #f5f5f7;
+  --color-surface-hover: #e8e8ed;
+
+  --color-text-primary: #1d1d1f;
+  --color-text-secondary: #6e6e73;
+  --color-text-tertiary: #86868b;
+
+  --color-border: #d2d2d7;
+  --color-border-subtle: rgba(0, 0, 0, 0.08);
+
+  /* Dark Cinematic Section Tokens */
+  --color-dark-bg: #000000;
+  --color-dark-surface: #121214;
+  --color-dark-card: #1c1c1e;
+  --color-dark-text-primary: #f5f5f7;
+  --color-dark-text-secondary: #86868b;
+  --color-dark-border: rgba(255, 255, 255, 0.12);
+
+  /* Header & Navigation */
+  --header-height: 48px;
+  --header-blur: 20px;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    direction: rtl;
+    text-align: start;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+  }
+
+  /* Critical Rule: NEVER add letter-spacing to Persian text */
+  *:not(.latin-font) {
+    letter-spacing: 0 !important;
+  }
+
+  .latin-font {
+    letter-spacing: normal;
+  }
+
+  body {
+    font-family: var(--font-vazirmatn), system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* Apple-style Fluid Typography with clamp */
+  h1, .hero-title {
+    font-size: clamp(2.2rem, 5vw + 1rem, 4.25rem);
+    line-height: 1.15;
+    font-weight: 700;
+  }
+
+  h2, .section-title {
+    font-size: clamp(1.75rem, 3.5vw + 0.5rem, 2.75rem);
+    line-height: 1.25;
+    font-weight: 700;
+  }
+
+  h3, .card-title {
+    font-size: clamp(1.25rem, 2vw + 0.25rem, 1.75rem);
+    line-height: 1.35;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: clamp(0.95rem, 1vw + 0.5rem, 1.125rem);
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+  }
+}
+
+@layer utilities {
+  /* Apple Glassmorphism Utility */
+  .apple-glass {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .apple-glass-dark {
+    background: rgba(18, 18, 20, 0.78);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Smooth Subpixel Rendering */
+  .apple-subpixel {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+/* Reduced Motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.16);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.28);
+}

@@ -1,0 +1,128 @@
+// Prisma Schema for Castleco (قلعه فناوران هیمن)
+// Designed for MySQL / MariaDB (Compatible with Iranian Hosts & Local Development)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+enum RequestType {
+  DEMO
+  CONTACT
+  TRIAL
+  PURCHASE
+}
+
+enum SubmissionStatus {
+  NEW
+  IN_PROGRESS
+  CLOSED
+}
+
+model User {
+  id                  String          @id @default(cuid())
+  username            String          @unique
+  passwordHash        String
+  name                String?
+  role                Role            @default(EDITOR)
+  twoFactorEnabled    Boolean         @default(false)
+  twoFactorSecret     String?
+  failedLoginAttempts Int             @default(0)
+  lockedUntil         DateTime?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  auditLogs           AdminAuditLog[]
+
+  @@map("users")
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  titleFa        String
+  titleEn        String
+  subtitle       String
+  description    String   @db.Text
+  highlights     String   @db.Text // JSON string array of key features
+  specifications String?  @db.Text // JSON string of technical specs
+  downloadLink   String?
+  iconName       String   @default("Database")
+  isFeatured     Boolean  @default(false)
+  isFree         Boolean  @default(false)
+  order          Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([slug])
+  @@index([order])
+  @@map("products")
+}
+
+model PageContent {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  title     String
+  content   String   @db.Text
+  section   String   @default("general")
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([section])
+  @@map("page_contents")
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   @db.Text
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+  @@map("site_settings")
+}
+
+model ContactSubmission {
+  id          String           @id @default(cuid())
+  name        String
+  company     String
+  phone       String
+  email       String?
+  productSlug String?
+  requestType RequestType      @default(DEMO)
+  message     String           @db.Text
+  status      SubmissionStatus @default(NEW)
+  adminNotes  String?          @db.Text
+  ipAddress   String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_submissions")
+}
+
+model AdminAuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String?
+  details   String?  @db.Text
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("admin_audit_logs")
+}
